@@ -216,23 +216,13 @@ RUN set -vx \
 
 RUN date; df -h
 
-SHELL ["/bin/bash", "-c"]
-
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
-
-### Install necessary python 2 modules
+### Install necessary modules
 RUN set -vx \
- && python2 -m pip install --upgrade pip \
- && python2 -m pip install --upgrade setuptools wheel virtualenv \
- && python2 -m pip install ez_setup==0.9 \
- && python2 -m pip install absl-py==0.7.1
-
-RUN set -vx \
- && python3 -m pip install --upgrade pip \
- && python3 -m pip install --upgrade setuptools wheel virtualenv \
- && python3 -m pip install pillow==6.0.0 \
- && python3 -m pip install opencv-python-headless
+ && pip install --upgrade pip \
+ && pip install ez_setup==0.9 \
+        absl-py==0.7.1 \
+        pillow==6.0.0 \
+        opencv-python-headless
 
 
 # install gflags
