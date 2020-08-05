@@ -127,6 +127,19 @@ RUN set -vx \
 else \
 \
     /tmp/yum_install.sh \
+        libtiff-devel \
+        libjpeg-devel \
+        openjpeg2-devel \    
+        freetype-devel \
+        lcms2-devel \
+        libwebp-devel \
+        tcl-devel \
+        tk-devel \
+        harfbuzz-devel \
+        fribidi-devel \
+        libraqm-devel \
+        libimagequant-devel 
+        libxcb-devel \
         bzip2-devel \
         expat-devel \
         gdbm-devel \
