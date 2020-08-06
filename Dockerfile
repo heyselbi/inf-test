@@ -104,6 +104,7 @@ done \n' \
 
 RUN set -vx \
 \
+&& yum install libffi-devel \
 && if whereis python3 | grep -q "python3.." ; then \
 \
     if yum info python38-devel > /dev/null 2>&1; then \
@@ -144,7 +145,6 @@ else \
         expat-devel \
         gdbm-devel \
         libdb4-devel \
-        libffi-devel \
         ncurses-devel \
         openssl-devel \
         readline-devel \
@@ -192,6 +192,7 @@ else \
     ln -s python3 python; \
 fi \
 \
+&& yum clean all \
 && whereis python3 \
 && python3 --version \
 && pip3 --version \
