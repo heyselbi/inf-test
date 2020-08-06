@@ -27,7 +27,7 @@ RUN set -vx \
 \
 && echo -e '\
 set -vx \n\
-for (( TRY=1; TRY<=5; TRY++ )); do \n\
+for (( TRY=1; TRY<=3; TRY++ )); do \n\
     /bin/ls -alFR /usr/lib/.build-id \n\
     /bin/rm -rf /usr/lib/.build-id \n\
     yum -y -v install $@ \n\
@@ -94,8 +94,8 @@ done \n' \
     vim-enhanced \
     wget \
     xz \
-    zip
-
+    zip \
+&& yum clean all
 
 
 # Try to use Python3.8+
@@ -129,7 +129,7 @@ else \
     /tmp/yum_install.sh \
         libtiff-devel \
         libjpeg-devel \
-        openjpeg2-devel \    
+        openjpeg2-devel \
         freetype-devel \
         lcms2-devel \
         libwebp-devel \
@@ -138,7 +138,7 @@ else \
         harfbuzz-devel \
         fribidi-devel \
         libraqm-devel \
-        libimagequant-devel 
+        libimagequant-devel \
         libxcb-devel \
         bzip2-devel \
         expat-devel \
@@ -212,8 +212,7 @@ RUN set -vx \
 && make -j`getconf _NPROCESSORS_ONLN` install \
 && cd /tmp \
 && /bin/rm -rf /tmp/cmake* \
-&& cmake --version
-
+&& cmake --version 
 
 RUN date; df -h
 
@@ -235,7 +234,8 @@ RUN set -vx \
  && pip install ez_setup==0.9 \
         absl-py==0.7.1 \
         pillow==6.0.0 \
-        opencv-python-headless
+        opencv-python-headless \
+        wheel==0.34.2
 
 
 # install gflags
@@ -262,6 +262,7 @@ RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for
  && mv wait-for-it.sh /usr/local/bin/
 
 RUN git clone -b v1.0.6 https://github.com/dcdillon/cpuaff \
+ && /tmp/yum_install.sh automake \
  && cd cpuaff \
  && ls -lF \
  && ./bootstrap.sh \
@@ -269,7 +270,8 @@ RUN git clone -b v1.0.6 https://github.com/dcdillon/cpuaff \
  && make \
  && make install \
  && cd ../ \
- &&  rm -rf cpuaff
+ &&  rm -rf cpuaff \
+ && yum clean all
 
 RUN git clone -b v1.4.1 https://github.com/google/benchmark.git \
  && cd benchmark \
@@ -321,33 +323,48 @@ RUN wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/ba
  && ./bazel-$BAZEL_VERSION-installer-linux-x86_64.sh \
  && rm -f bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
+# Install protobuf - needed for onnx below
+RUN git clone https://github.com/google/protobuf.git \
+ && cd protobuf \
+ && ./autogen.sh \
+ && ./configure \
+ && make
+
 # Install dependencies of TensorRT-Laboratory
-RUN python3 -m pip install click==6.7 \
- && python3 -m pip install Jinja2==2.10 \
- && python3 -m pip install MarkupSafe==1.0 \
- && python3 -m pip install grpcio==1.16.1 \
- && python3 -m pip install matplotlib==3.0.2 \
- && python3 -m pip install onnx==1.3.0 \
- && python3 -m pip install jupyter-client==5.2.4 \
- && python3 -m pip install jupyter-core==4.4.0 \
- && python3 -m pip install jupyterlab==0.35.4 \
- && python3 -m pip install jupyterlab-server==0.2.0 \
- && python3 -m pip install wurlitzer==1.0.2 \
- && python3 -m pip install pytest==4.6.2
+RUN set -vx \
+ && pip install --upgrade pip \
+ && pip install click==6.7 \
+				Jinja2==2.10 \
+				MarkupSafe==1.1.0 \
+				grpcio==1.16.1 \
+ 				matplotlib==3.0.2 \
+				onnx==1.3.0 \
+				jupyter-client==5.2.4 \
+				jupyter-core==4.4.0 \
+				jupyterlab==0.35.4 \
+				jupyterlab-server==0.2.0 \
+				wurlitzer==1.0.2 \
+				pytest==4.6.2
 
 # Install TensorFlow, needed by SSDMobileNet benchmark
 # Install CPU version since we don't actually need to run TensorFlow.
-RUN python3 -m pip install tensorflow==1.13.1
+RUN set -vx \
+ && pip install --upgrade pip \
+ && pip install tensorflow==1.13.1
 
 # Install pytorch and torchvision, needed by SSDResNet34 benchmark
-RUN python3 -m pip install torch==1.1.0 \
- && python3 -m pip install torchvision==0.3.0 \
- && python3 -m pip install pycuda==2019.1 \
- && python3 -m pip install Cython==0.29.10 \
- && python3 -m pip install pycocotools==2.0.0
+RUN set -vx \
+ && pip install --upgrade pip \
+ && pip install torch==1.1.0 \
+				torchvision==0.3.0 \
+				pycuda==2019.1 \
+				Cython==0.29.10 \
+				pycocotools==2.0.0
 
 # Install sacrebleu, needed by GNMT benchmark
-RUN python3 -m pip install sacrebleu==1.3.3
+RUN set -vx \
+ && pip install --upgrade pip \
+ && pip install sacrebleu==1.3.3
 
 # Install CUB, needed by GNMT benchmark
 RUN wget https://github.com/NVlabs/cub/archive/1.8.0.zip -O cub-1.8.0.zip \
@@ -395,3 +412,4 @@ COPY . /work
 RUN cd /work
 
 WORKDIR /work
+
