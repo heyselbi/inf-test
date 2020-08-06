@@ -236,7 +236,7 @@ RUN set -vx \
         absl-py==0.7.1 \
         pillow==6.0.0 \
         opencv-python-headless \
-        wheel==0.34.2
+        wheel
 
 
 # install gflags
