@@ -104,7 +104,7 @@ done \n' \
 
 RUN set -vx \
 \
-&& yum install libffi-devel \
+&& yum -y -v install libffi-devel \
 && if whereis python3 | grep -q "python3.." ; then \
 \
     if yum info python38-devel > /dev/null 2>&1; then \
