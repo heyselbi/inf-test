@@ -234,9 +234,12 @@ RUN set -vx \
  && pip install --upgrade pip \
  && pip install ez_setup==0.9 \
         absl-py==0.7.1 \
-        pillow==6.0.0 \
         opencv-python-headless \
         wheel
+	
+RUN set -vx \
+ && python3 -m pip install --upgrade pip \
+ && python3 -m pip install --upgrade Pillow==6.0.0
 
 
 # install gflags
