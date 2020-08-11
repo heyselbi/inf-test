@@ -232,8 +232,10 @@ RUN date; df -h
 ### Install necessary modules
 RUN set -vx \
  && pip install --upgrade pip \
+ && pip uninstall pil \
  && pip install ez_setup==0.9 \
         absl-py==0.7.1 \
+	pillow==6.0.0 \
         opencv-python-headless \
         wheel
 	
