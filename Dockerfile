@@ -339,6 +339,7 @@ RUN git clone https://github.com/google/protobuf.git \
 
 # Install dependencies of TensorRT-Laboratory
 RUN set -vx \
+ && /tmp/yum_install.sh freetype freetype-devel libpng-devel \
  && pip install --upgrade pip \
  && pip install click==6.7 \
 				Jinja2==2.10 \
