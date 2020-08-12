@@ -235,7 +235,7 @@ RUN set -vx \
  && pip uninstall pil \
  && pip install ez_setup==0.9 \
         absl-py==0.7.1 \
-	pillow==6.0.0 \
+# pillow==6.0.0 \
         opencv-python-headless \
         wheel
 	
