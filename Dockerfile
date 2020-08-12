@@ -238,7 +238,7 @@ RUN set -vx \
 # pillow==6.0.0 \
         opencv-python-headless \
         wheel
-	
+
 #RUN set -vx \
 # && python3 -m pip install --upgrade pip \
 # && python3 -m pip install --upgrade Pillow==6.0.0
@@ -331,6 +331,7 @@ RUN wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/ba
 
 # Install protobuf - needed for onnx below
 RUN git clone https://github.com/google/protobuf.git \
+ && /tmp/yum_install.sh libtool \
  && cd protobuf \
  && ./autogen.sh \
  && ./configure \
